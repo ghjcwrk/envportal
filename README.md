@@ -1,7 +1,20 @@
 # Env Portal
 
+A minimal workflow for encrypting .env files and restoring them via QR code using Dagger
+
+## 🧰 Install Dagger CLI
+
+[Installation | Dagger](https://docs.dagger.io/install/)
+
 ```zsh
-\
+brew install dagger/tap/dagger
+```
+
+## 🔐 Step 1: Encrypt .env and Generate Encrypted Dagger Command as QR Code
+
+> Encrypt a .env file using dotenvx, then encrypt the Dagger command used for decryption, and generate a QR code from it
+
+```zsh
 export SECRET='super-secure-password'&&\
 dagger core container from --address=oven/bun:slim\
   with-exec --args=sh,-c,'apt-get update&&apt-get install -y --no-install-recommends curl ca-certificates&&curl -s https://pkgx.sh|sh'\
@@ -20,8 +33,13 @@ dagger core container from --address=oven/bun:slim\
   export --path=qrcode.png
 ```
 
+## 🔓 Step 2: Scan QR Code and Restore Access to .env
+
+> Decrypt the Dagger command from the QR code
+> 
+> Running the recovered command will give you access to the contents of the .env file
+
 ```zsh
-\
 export SECRET='super-secure-password'&&\
 dagger core container from --address=oven/bun:slim\
   with-exec --args=sh,-c,'apt-get update&&apt-get install -y --no-install-recommends zbar-tools'\
